@@ -19,7 +19,7 @@ const Appointmentdisp = () => {
   return (
     <ScrollView style={[styles.appointmentdisp, styles.iconLayout]}>
 
-      <View style={[styles.empButtonParent, styles.alertTextSpaceBlock]}>
+  <View style={[styles.empButtonParent, styles.alertTextSpaceBlock]}>
   
    <View style={[styles.empButton, styles.iconFlexBox]}>
       <View style={[styles.employeeWrapper, styles.empNameParentFlexBox]}>
@@ -40,7 +40,7 @@ const Appointmentdisp = () => {
               <Image
                 style={styles.empImgUrl}
                 resizeMode="cover"
-                source={require("../assets/emp-img-url2.png")}
+                source={require("../assets/emp-img-url.png")}
               />
             </Pressable>
           </View>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   empNameTypo: {
-    fontSize: FontSize.size_sm,
+    fontSize: FontSize.size_3xs,
     textAlign: "center",
     lineHeight: 23,
     letterSpacing: 0,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
 
   employee: {
-    fontSize: FontSize.size_3xs,
+    fontSize: FontSize.size_xs,
     color: Color.colorSandybrown,
   },
   employeeWrapper: {
@@ -250,8 +250,8 @@ const styles = StyleSheet.create({
 
   empImgUrl: {
     borderRadius: Border.br_6xl,
-    width: 47,
-    height: 47,
+    width: 32,
+    height: 32,
     overflow: "hidden",
   },
   empImg: {

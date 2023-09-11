@@ -2,7 +2,8 @@ import * as React from "react";
 import { Text, StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { FontSize, FontFamily, Color, Border, Padding } from "../GlobalStyles";
 
-const EmpButton = ({name}) => {
+const EmpButton = ({name, key}) => {
+  console.log(key)
   return (
     <TouchableOpacity activeOpacity={0.2} onPress={() => {/* Add your onPress logic here */}}>
       <View style={styles.nameBtnFlexBox}>

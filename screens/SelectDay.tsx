@@ -6,49 +6,88 @@ import {
   Easing,
   TouchableOpacity,
   Image,
-  Text
+  Text,
+  Modal,
+  ScrollView,
+  SafeAreaView
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Padding, FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 
 const SelectDay = () => {
-  const translateY = useRef(new Animated.Value(500)).current;
+  const translateY = useRef(new Animated.Value(200)).current;
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    if (modalVisible) {
-      // Animate the modal to come from the bottom
-      Animated.timing(translateY, {
-        toValue: 500,
-        duration: 1000,
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      // Animate the modal to go back to the bottom
-      Animated.timing(translateY, {
-        toValue: 50, // Adjust the value to hide it at the bottom
-        duration: 1000,
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
-    }
-  }, [modalVisible]);
+  const [visible, setVisible]=useState(false)
+  const show=()=>setVisible(true)
+  const hide=()=>setVisible(false)
+
+  useEffect(()=>{
+show();
+  },[])
+
+
+  // useEffect(() => {
+  //   if (modalVisible) {
+  //     // Animate the modal to come from the bottom
+  //     Animated.timing(translateY, {
+  //       toValue: 500,
+  //       duration: 1000,
+  //       easing: Easing.ease,
+  //       useNativeDriver: false,
+  //     }).start();
+  //   } else {
+  //     // Animate the modal to go back to the bottom
+  //     Animated.timing(translateY, {
+  //       toValue: 50, // Adjust the value to hide it at the bottom
+  //       duration: 1000,
+  //       easing: Easing.ease,
+  //       useNativeDriver: false,
+  //     }).start();
+  //   }
+  // }, [modalVisible]);
+
+  // return (
+  //   <SafeAreaView style={[styles.selectDay, styles.iconLayout]}>
+  //     <Modal
+  //     visible={visible}
+  //     transparent={true}
+  //     animationType="slide"
+  //    onRequestClose={() => hide()}
+  //     >
+  //     <View
+  //       style={[
+  //         styles.selectEmployeeModal,
+  //         // { transform: [{ translateY }] },
+  //       ]}
+  //       contentContainerStyle={styles.modal}
+  //     >
+  //       <View style={styles.modalContainer}>
+        
+  //       </View>
+  //     </View>
+  //     </Modal>
+  //   </SafeAreaView>
+  // );
 
   return (
-    <View style={[styles.selectDay, styles.iconLayout]}>
-      <Animated.View
-        style={[
-          styles.selectEmployeeModal,
-          { transform: [{ translateY }] },
-        ]}
+    <SafeAreaView style={[styles.iconLayout]}>
+      <Modal
+      visible={visible}
+      animationType="slide"
+      onRequestClose={() => hide()}
+      transparent
       >
+     <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+          
+          <ScrollView style={styles.calendarContainer}>
         <View style={styles.close}>
           <TouchableOpacity
             style={styles.vector}
             activeOpacity={0.2}
             onPress={() => {
-              setModalVisible(true); // Close the modal when the close button is pressed
+              hide(); // Close the modal when the close button is pressed
             }}
           >
             <Image
@@ -68,12 +107,36 @@ const SelectDay = () => {
             }}
           />
         </View>
-      </Animated.View>
-    </View>
+        </ScrollView>
+
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    
+    justifyContent: "flex-end", // Align the modal at the bottom
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    maxHeight: "50%",
+  },
+  calendarContainer:{
+    width: "100%",
+    paddingVertical: 10,
+  },
+  modal:{
+    justifyContent: "flex-end",
+    alignItems: "center",
+    alignSelf: "stretch",
+  },
   iconLayout: {
     overflow: "hidden",
   },
@@ -184,7 +247,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: Border.br_10xl,
     backgroundColor: "#ffffff",
     shadowColor: "rgba(0, 0, 0, 0.8)",
-    height: "100%",
+height:"100%",
     width: "100%",
     shadowOffset: {
       width: 1,
@@ -195,10 +258,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     overflow: "hidden",
     paddingHorizontal: 0,
-    paddingVertical: Padding.p_3xs,
-    marginTop: 100,
-    alignItems: "center",
-    alignSelf: "stretch",
+   
   },
 });
 

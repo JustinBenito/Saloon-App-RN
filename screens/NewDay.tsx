@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Modal, View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
 
 const ModalComponent = () => {
 
@@ -34,9 +35,9 @@ show();
             </TouchableOpacity>
           </View>
           <View style={styles.content}>
-            <Text>Placeholder Text</Text>
+            <Text style={styles.heading}>When is it ?</Text>
             <View style={styles.flexContainer}>
-            <View style={styles.imageContainer}>
+            <View style={[styles.imageContainer, {marginRight: 20}]}>
                 <TouchableOpacity>
               <Image
           resizeMode="cover"
@@ -46,7 +47,7 @@ show();
               </TouchableOpacity>
               <Text>Morning</Text>
             </View>
-            <View style={styles.imageContainer}>
+            <View style={[styles.imageContainer, {marginRight: 20}]}>
                 <TouchableOpacity>
               <Image
           resizeMode="cover"
@@ -56,7 +57,7 @@ show();
               </TouchableOpacity>
               <Text>Evening</Text>
             </View>
-            <View style={styles.imageContainer}>
+            <View style={[styles.imageContainer]}>
                 <TouchableOpacity>
               <Image
           resizeMode="cover"
@@ -76,6 +77,14 @@ show();
 };
 
 const styles = StyleSheet.create({
+  heading:{
+    fontSize: FontSize.size_lgi_5,
+    color: Color.colorBlack,
+    fontWeight: "bold",
+    marginLeft: 20,
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
     vectorIcon: {
         width: 11,
         height: 11,
@@ -96,8 +105,8 @@ height: "100%"
   },
   modal: {
     backgroundColor: 'white',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
     padding: 20,
     maxHeight: '50%', // Make the modal take up half of the screen
   },
@@ -120,7 +129,7 @@ height: "100%"
     alignItems: 'center',
     marginBottom: 10,
     marginTop: 30,
-    marginRight: 20,
+
   },
   image: {
     width: 70,

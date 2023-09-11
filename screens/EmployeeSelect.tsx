@@ -17,125 +17,107 @@ import EmpButton from "../components/EmpButton";
 
 const EmployeeSelect = () => {
 
-  const translateY = useRef(new Animated.Value(400)).current;
-  const translateNegativeY = useRef(new Animated.Value(-400)).current;
+  const [visible, setVisible]=useState(false)
+  const show=()=>setVisible(true)
+  const hide=()=>setVisible(false)
 
-  const [animate,setAnimate]=useState(false)
+  useEffect(()=>{
+show();
+  },[])
 
-  useEffect(() => {
-    if (animate) {
-      // Animate the ScrollView to the bottom
-      Animated.timing(translateY, {
-        toValue: 500, // Adjust the value to hide it at the bottom
-        duration: 1000, // 1 second duration
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start(() => {
-
-      });
-    } else {
-      // Animate the ScrollView from the bottom to its position
-      Animated.timing(translateY, {
-        toValue: 0,
-        duration: 500, // Adjust the duration as needed
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
-    }
-  }, [animate]);
+  let items=[{name:"Yativ"},{name:"Yativ"}]
 
 
   return (
-    <View style={[styles.employeeSelect, styles.iconLayout]}>
+    <SafeAreaView style={[styles.employeeSelect, styles.iconLayout]}>
       <Modal
-      // style={[
-      //   styles.employeeSelect,
-      //   styles.iconLayout,
-      //   { transform: [{ translateY }] },
-      // ]}
-    >
-
-      <ScrollView
-        style={styles.selectEmployeeModal}
-        horizontal={false}
-        showsVerticalScrollIndicator={true}
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.selectEmployeeModalContent}
+      visible={visible}
+      animationType="slide"
+      onRequestClose={() => hide()}
+      transparent
       >
-        <View style={styles.close}>
-          <TouchableOpacity onPress={()=>{
-
-            // reverse the initial animation and make the ScrollView component to go to the bottom
-            setAnimate(true)
-          }}>
-          <Image
-            style={styles.vectorIcon}
-            resizeMode="cover"
-            source={require("../assets/vector.png")}
-          />
-          </TouchableOpacity>
+     <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+          <ScrollView
+              style={styles.scrollView}
+              contentContainerStyle={styles.scrollViewContent}
+            >
+            <View style={styles.header}>
+              <TouchableOpacity onPress={() => hide()}>
+                <Image
+                  style={styles.vectorIcon}
+                  resizeMode="cover"
+                  source={require("../assets/vector.png")}
+                />
+              </TouchableOpacity>
+              
+            </View>
+            <View style={styles.text}>
+            <Text style={styles.heading}>Pick an employee</Text>
+            </View>
+              {items.map((item, index) => (
+                <EmpButton name={item.name} key={index}/>
+              ))}
+            </ScrollView>
+          </View>
         </View>
-        <View style={[styles.heading1, styles.empBtnsSpaceBlock]}>
-          <Text style={[styles.linkPick, styles.empNameTypo]} numberOfLines={1}>
-            Pick an employee
-          </Text>
-        </View>
-
-        <EmpButton name={"Yativ"}/>
-        <EmpButton name={"Orange"}/>
-        <EmpButton name={"Yellow"}/>
-        <EmpButton name={"Yativ"}/>
-        <EmpButton name={"Orange"}/>
-        <EmpButton name={"Yellow"}/>
-        <EmpButton name={"Yativ"}/>
-        <EmpButton name={"Orange"}/>
-        <EmpButton name={"Yellow"}/>
-      </ScrollView>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  navbar: {
-    backgroundColor: "#000",
+  text:{
+    alignItems: "center",
+  },
+  modal:{
+justifyContent: "flex-end",
+height: "100%",
   },
   selectEmployeeModalContent: {
-    flexDirection: "column",
-    paddingHorizontal: 0,
-    paddingVertical: 10,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    backgroundColor: Color.textColorLight,
-  },
-  iconLayout: {
-    width: "100%",
-    overflow: "hidden",
+
+    backgroundColor: '#fff',
+    justifyContent: 'flex-end',
   },
   empBtnsSpaceBlock: {
-  marginTop: 16,
-  alignItems: "center",
-  flex: 1,
-},
-empNameTypo: {
-  letterSpacing: 0,
-  fontFamily: FontFamily.interRegular,
-},
-heading1FlexBox: {
-  flexDirection: "row",
-  alignItems: "center",
-},
-  vectorIcon: {
-    width: 11,
-    height: 11,
+    marginTop: 20,
   },
-  close: {
-    paddingHorizontal: Padding.p_6xl,
-    paddingVertical: 0,
-    justifyContent: "flex-end",
-    flexDirection: "row",
-    alignSelf: "stretch",
-    alignItems: "center",
+  empNameTypo: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  close:{
+flexDirection: "row",
+justifyContent: 'flex-end',
+  },
+  closebtn: {
+    top: 20,
+    right: 20,
+  },
+  vectorIcon: {
+    width: 10,
+    height: 10,
+  },
+  selectEmployeeModal: {
+    height: "100%",
+
+  },
+  empButton: {
+    marginBottom: 10,
+  },
+  empImgUrl: {
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+  },
+  empImg: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  employeeSelect: {
+
   },
   linkPick: {
     fontSize: FontSize.size_lgi_5,
@@ -147,71 +129,49 @@ heading1FlexBox: {
     padding: Padding.p_3xs,
     justifyContent: "center",
     flexDirection: "row",
-    alignSelf: "stretch",
+
   },
-  empName: {
-    fontSize: FontSize.size_sm,
-    lineHeight: 23,
-    color: Color.colorDarkslategray_100,
-    textAlign: "center",
-  },
-  nameShadowBox: {
-    borderColor: "rgba(0,0,0,0.5)",
-    borderWidth: 2,
-    paddingVertical: Padding.p_6xs,
-    paddingHorizontal: Padding.p_14xl,
-    elevation: 5,
-    shadowRadius: 5,
-    shadowColor: "rgba(0, 0, 0, 0.15)",
-    borderRadius: Border.br_26xl,
-    justifyContent: "center",
-    shadowOpacity: 1,
-    shadowOffset: {
-      width: 1,
-      height: -3,
-    },
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: Color.textColorLight,
-  },
-  empImgUrl: {
-    borderRadius: Border.br_6xl,
-    width: 66,
-    height: 66,
-    overflow: "hidden",
-  },
-  empImg: {
-    marginLeft: -28,
-    flexDirection: "row",
-  },
-  empButton: {
-    alignItems: "center",
-  },
-  selectEmployeeModal: {
-    borderTopLeftRadius: Border.br_10xl,
-    borderTopRightRadius: Border.br_10xl,
-    shadowColor: "rgba(0, 0, 0, 0.8)",
-    shadowRadius: 4,
-    elevation: 4,
-    marginTop: 250,
-    shadowOpacity: 1,
-    // shadowOffset: {
-    //   width: 1,
-    //   height: -5,
-    // },
-    height: "100%",
+  iconLayout: {
     width: "100%",
-    alignSelf: "stretch",
     overflow: "hidden",
-    flex: 1,
-    backgroundColor: "#ffffff",
   },
-  employeeSelect: {
-    alignItems: "center",
-    overflow: "hidden",
+  container: {
     flex: 1,
-    backgroundColor: "#e3e3e3",
-    width: "100%",
+  },
+  modalContainer: {
+    flex: 1,
+
+    justifyContent: "flex-end", // Align the modal at the bottom
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 30,
+    maxHeight: "50%",
+    borderTopRightRadius: 30,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+
+  heading: {
+    fontSize: FontSize.size_lgi_5,
+    color: Color.colorBlack,
+    fontWeight: "bold",
+    marginLeft: 20,
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
+  scrollView: {
+    maxHeight: 400, // Set a max height for the scroll view
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  scrollViewContent: {
+    flexGrow: 1, // Allow the content to grow within the scroll view
   },
 });
 

@@ -8,75 +8,82 @@ import {
   StyleSheet,
   Animated,
   Easing,
+  SafeAreaView,
+  Modal,
 } from "react-native";
 import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
-import SelectEmployeeModal from "../components/SelectEmployeeModal";
+import SelectTreatment from "../components/SelectTreatment";
 
 const BookAppointments = ({ treatment }) => {
-  const translateY = useRef(new Animated.Value(300)).current;
+  const translateY = useRef(new Animated.Value(800)).current;
   const [modalVisible, setModalVisible] = useState(false);
+  const [animationStarted, setAnimationStarted] = useState(false);
+
+  const show = () => {
+    setAnimationStarted(true);
+    setModalVisible(true);
+  };
+
+  const hide = () => {
+    setModalVisible(false);
+  };
 
   useEffect(() => {
-    if (modalVisible) {
-      // Animate the ScrollView to come from the bottom
-      Animated.timing(translateY, {
-        toValue: 300,
-        duration: 1000,
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
-    } else {
-      // Animate the ScrollView to go back to the bottom
-      Animated.timing(translateY, {
-        toValue: 0, 
-        duration: 1000,
-        easing: Easing.ease,
-        useNativeDriver: false,
-      }).start();
+    show();
+    if (animationStarted) {
+      // Animate the ScrollView to come from the bottom after a delay
+      setTimeout(() => {
+        Animated.timing(translateY, {
+          toValue: 400,
+          duration: 500,
+          easing: Easing.ease,
+          useNativeDriver: false,
+        }).start();
+      }, 1000);
     }
-  }, [modalVisible]);
+  }, [animationStarted]);
 
   return (
-    <View style={[styles.bookappointments, styles.iconLayout]}>
-      <Animated.View
-        style={[
-          styles.bookappointments,
-          styles.iconLayout,
-          { transform: [{ translateY }] },
-        ]}
+    <SafeAreaView style={[styles.bookappointments, styles.iconLayout]}>
+      <Modal
+        visible={modalVisible}
+        animationType="slide"
+        onRequestClose={() => hide()}
+        transparent
       >
-        <ScrollView
-          style={[styles.selectEmployeeModal]}
-          showsVerticalScrollIndicator={true}
-          showsHorizontalScrollIndicator={true}
-          contentContainerStyle={styles.selectEmployeeModalContent}
+        <Animated.View
+          style={[styles.selectEmployeeModal, { transform: [{ translateY }] }]}
         >
-          <View style={styles.close}>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
-              <Image
-                style={styles.vectorIcon}
-                resizeMode="cover"
-                source={require("../assets/vector.png")}
-              />
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.heading, styles.headingFlexBox]}>
-            <Text
-              style={[styles.empHeading, styles.empTypo]}
-              numberOfLines={1}
-            >
-              Choose a treatment
-            </Text>
-          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={true}
+            showsHorizontalScrollIndicator={true}
+            contentContainerStyle={styles.selectEmployeeModalContent}
+          >
+            <View style={styles.close}>
+              <TouchableOpacity onPress={() => hide()}>
+                <Image
+                  style={styles.vectorIcon}
+                  resizeMode="cover"
+                  source={require("../assets/vector.png")}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.heading, styles.headingFlexBox]}>
+              <Text style={[styles.empHeading, styles.empTypo]} numberOfLines={1}>
+                Choose a treatment
+              </Text>
+            </View>
 
-          <SelectEmployeeModal treatment={"HairCut"} />
-          <SelectEmployeeModal treatment={"Saloon"} />
-          <SelectEmployeeModal treatment={"Cuts"} />
-        </ScrollView>
-      </Animated.View>
-    </View>
+            <SelectTreatment treatment={"HairCut"} />
+            <SelectTreatment treatment={"Saloon"} />
+            <SelectTreatment treatment={"Cuts"} />
+          </ScrollView>
+        </Animated.View>
+      </Modal>
+    </SafeAreaView>
   );
 };
+
 
 const styles = StyleSheet.create({
   navbar: {
@@ -87,8 +94,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   bookappointments: {
-    marginTop: 150,
-    flex: 1,
+
     alignItems: "center",
   },
   selectEmployeeModalContent: {
