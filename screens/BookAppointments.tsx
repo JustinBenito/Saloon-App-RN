@@ -1,51 +1,79 @@
-import * as React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState, useEffect, useRef } from "react";
 import {
-  Pressable,  ScrollView,
+  View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
   Image,
   StyleSheet,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  View,
+  Animated,
+  Easing,
 } from "react-native";
-import SelectEmployeeModal from "../components/SelectEmployeeModal";
 import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
+import SelectEmployeeModal from "../components/SelectEmployeeModal";
 
+const BookAppointments = ({ treatment }) => {
+  const translateY = useRef(new Animated.Value(300)).current;
+  const [modalVisible, setModalVisible] = useState(false);
 
-const BookAppointments = ({treatment}) => {
-
-
+  useEffect(() => {
+    if (modalVisible) {
+      // Animate the ScrollView to come from the bottom
+      Animated.timing(translateY, {
+        toValue: 300,
+        duration: 1000,
+        easing: Easing.ease,
+        useNativeDriver: false,
+      }).start();
+    } else {
+      // Animate the ScrollView to go back to the bottom
+      Animated.timing(translateY, {
+        toValue: 0, 
+        duration: 1000,
+        easing: Easing.ease,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [modalVisible]);
 
   return (
     <View style={[styles.bookappointments, styles.iconLayout]}>
-      <ScrollView
-      style={[styles.selectEmployeeModal]}
-      showsVerticalScrollIndicator={true}
-      showsHorizontalScrollIndicator={true}
-      contentContainerStyle={styles.selectEmployeeModalContent}
-    >
-      <View style={styles.close}>
-        <TouchableOpacity>
-        <Image
-          style={styles.vectorIcon}
-          resizeMode="cover"
-          source={require("../assets/vector.png")}
-        />
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.heading, styles.headingFlexBox]}>
-        <Text style={[styles.empHeading, styles.empTypo]} numberOfLines={1}>
-          Choose a treatment
-        </Text>
-      </View>
+      <Animated.View
+        style={[
+          styles.bookappointments,
+          styles.iconLayout,
+          { transform: [{ translateY }] },
+        ]}
+      >
+        <ScrollView
+          style={[styles.selectEmployeeModal]}
+          showsVerticalScrollIndicator={true}
+          showsHorizontalScrollIndicator={true}
+          contentContainerStyle={styles.selectEmployeeModalContent}
+        >
+          <View style={styles.close}>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <Image
+                style={styles.vectorIcon}
+                resizeMode="cover"
+                source={require("../assets/vector.png")}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.heading, styles.headingFlexBox]}>
+            <Text
+              style={[styles.empHeading, styles.empTypo]}
+              numberOfLines={1}
+            >
+              Choose a treatment
+            </Text>
+          </View>
 
-      <SelectEmployeeModal treatment={"HairCut"}/>
-      <SelectEmployeeModal treatment={"Saloon"}/>
-      <SelectEmployeeModal treatment={"Cuts"}/>
-
-      
-    </ScrollView>
+          <SelectEmployeeModal treatment={"HairCut"} />
+          <SelectEmployeeModal treatment={"Saloon"} />
+          <SelectEmployeeModal treatment={"Cuts"} />
+        </ScrollView>
+      </Animated.View>
     </View>
   );
 };
@@ -59,10 +87,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   bookappointments: {
-marginTop: 300,
+    marginTop: 150,
     flex: 1,
     alignItems: "center",
-    
   },
   selectEmployeeModalContent: {
     flexDirection: "column",
@@ -236,7 +263,6 @@ marginTop: 300,
     shadowColor: "rgba(0, 0, 0, 0.8)",
     height: "100%",
     width: "100%",
-
     alignSelf: "stretch",
   },
 });

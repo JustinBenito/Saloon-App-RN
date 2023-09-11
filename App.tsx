@@ -13,6 +13,7 @@ import EmpButton from "./components/EmpButton";
 import TreatmentBtn from "./components/TreatmentBtn";
 import EmpButton1 from "./components/EmpButton1";
 import Appointmentdisp from "./screens/Appointmentdisp";
+import ModalComponent from "./screens/NewDay";
 import SelectDay from "./screens/SelectDay";
 import BookAppointments from "./screens/BookAppointments";
 import EmployeeSelect from "./screens/EmployeeSelect";
@@ -30,9 +31,17 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
-                        <Stack.Screen
+            <Stack.Screen
               name="EmployeeSelect"
               component={EmployeeSelect}
+              options={(props: any) => ({
+                headerShown: true,
+                header: () => <Navbar goto={"ModalComponent"}/>, //3
+              })}
+            />
+            <Stack.Screen
+              name="ModalComponent"
+              component={ModalComponent}
               options={(props: any) => ({
                 headerShown: true,
                 header: () => <Navbar goto={"BookAppointments"}/>, //3

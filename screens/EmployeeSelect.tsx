@@ -1,4 +1,4 @@
-import * as React from "react";
+import React,{useEffect, useRef,useState} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Pressable,
@@ -7,14 +7,54 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Animated,
+  Easing,
   View,
+  Modal,
 } from "react-native";
 import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
 import EmpButton from "../components/EmpButton";
 
 const EmployeeSelect = () => {
+
+  const translateY = useRef(new Animated.Value(400)).current;
+  const translateNegativeY = useRef(new Animated.Value(-400)).current;
+
+  const [animate,setAnimate]=useState(false)
+
+  useEffect(() => {
+    if (animate) {
+      // Animate the ScrollView to the bottom
+      Animated.timing(translateY, {
+        toValue: 500, // Adjust the value to hide it at the bottom
+        duration: 1000, // 1 second duration
+        easing: Easing.ease,
+        useNativeDriver: false,
+      }).start(() => {
+
+      });
+    } else {
+      // Animate the ScrollView from the bottom to its position
+      Animated.timing(translateY, {
+        toValue: 0,
+        duration: 500, // Adjust the duration as needed
+        easing: Easing.ease,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [animate]);
+
+
   return (
     <View style={[styles.employeeSelect, styles.iconLayout]}>
+      <Modal
+      // style={[
+      //   styles.employeeSelect,
+      //   styles.iconLayout,
+      //   { transform: [{ translateY }] },
+      // ]}
+    >
+
       <ScrollView
         style={styles.selectEmployeeModal}
         horizontal={false}
@@ -23,7 +63,11 @@ const EmployeeSelect = () => {
         contentContainerStyle={styles.selectEmployeeModalContent}
       >
         <View style={styles.close}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={()=>{
+
+            // reverse the initial animation and make the ScrollView component to go to the bottom
+            setAnimate(true)
+          }}>
           <Image
             style={styles.vectorIcon}
             resizeMode="cover"
@@ -47,6 +91,7 @@ const EmployeeSelect = () => {
         <EmpButton name={"Orange"}/>
         <EmpButton name={"Yellow"}/>
       </ScrollView>
+      </Modal>
     </View>
   );
 };
@@ -145,7 +190,7 @@ heading1FlexBox: {
   selectEmployeeModal: {
     borderTopLeftRadius: Border.br_10xl,
     borderTopRightRadius: Border.br_10xl,
-    shadowColor: "rgba(0, 0, 0, 0.08)",
+    shadowColor: "rgba(0, 0, 0, 0.8)",
     shadowRadius: 4,
     elevation: 4,
     marginTop: 250,

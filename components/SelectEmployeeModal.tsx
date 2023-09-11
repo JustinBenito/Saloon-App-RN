@@ -13,8 +13,7 @@ import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
 const SelectEmployeeModal = ({treatment}) => {
   return (
     <>
-    
-
+  
     <TouchableOpacity style={styles.headingFlexBox}>
         <View style={[styles.nameBtn, styles.nameFlexBox]}>
           <Text style={[styles.empName, styles.empTypo]}>{treatment}</Text>
