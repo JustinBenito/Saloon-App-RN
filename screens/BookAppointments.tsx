@@ -15,34 +15,60 @@ import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
 import SelectTreatment from "../components/SelectTreatment";
 
 const BookAppointments = ({ treatment }) => {
-  const translateY = useRef(new Animated.Value(800)).current;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [animationStarted, setAnimationStarted] = useState(false);
+ 
+ 
+  const [visible, setVisible]=useState(true)
+  const show=()=>setVisible(true)
+  const hide=()=>{setVisible(false);setTimeout(()=>setModalVisible(false),500)}
+  const [modalVisible, setModalVisible]=useState(true)
 
-  const show = () => {
-    setAnimationStarted(true);
-    setModalVisible(true);
-  };
 
-  const hide = () => {
-    setModalVisible(false);
-  };
+  const translate=useRef(new Animated.Value(300)).current
 
-  useEffect(() => {
-    show();
-    if (animationStarted) {
-      // Animate the ScrollView to come from the bottom after a delay
-      setTimeout(() => {
-        Animated.timing(translateY, {
-          toValue: 400,
-          duration: 500,
-          easing: Easing.ease,
-          useNativeDriver: false,
-        }).start();
-      }, 1000);
+  const translateScroll=useRef(new Animated.Value(300)).current
+
+  useEffect(()=>{
+    if(visible){
+    
+    Animated.timing(translate,{
+      toValue: 0,
+      useNativeDriver: true,
+      duration: 1000,
+      delay: 100,
+      easing: Easing.out(Easing.quad)
+    }).start()
+    
+    Animated.timing(translateScroll,{
+      toValue: 0,
+      useNativeDriver: true,
+      duration: 1000,
+      delay: 700,
+      easing: Easing.out(Easing.quad)
+    }).start()
+    
     }
-  }, [animationStarted]);
+    else{
+      Animated.timing(translate,{
+        toValue: 500,
+        useNativeDriver: true,
+        duration: 1000,
+        delay: 300,
+        easing: Easing.out(Easing.quad)
+      }).start()
+      
+      Animated.timing(translateScroll,{
+        toValue: 500,
+        useNativeDriver: true,
+        duration: 1000,
+        delay: 100,
+        easing: Easing.out(Easing.quad)
+      }).start()
+    }
+      },[visible])
+    
+    console.log(translate, translateScroll)
 
+ 
   return (
     <SafeAreaView style={[styles.bookappointments, styles.iconLayout]}>
       <Modal
@@ -51,14 +77,12 @@ const BookAppointments = ({ treatment }) => {
         onRequestClose={() => hide()}
         transparent
       >
-        <Animated.View
-          style={[styles.selectEmployeeModal, { transform: [{ translateY }] }]}
-        >
-          <ScrollView
-            showsVerticalScrollIndicator={true}
-            showsHorizontalScrollIndicator={true}
-            contentContainerStyle={styles.selectEmployeeModalContent}
-          >
+         <Animated.View style={[styles.modalContainer,{transform: [{translateY: translate}]}]}>
+          <View style={styles.modalContent}>
+          <Animated.ScrollView
+              style={[styles.scrollView,{transform: [{translateY: translateScroll}]}]}
+              contentContainerStyle={styles.scrollViewContent}
+            >
             <View style={styles.close}>
               <TouchableOpacity onPress={() => hide()}>
                 <Image
@@ -77,7 +101,8 @@ const BookAppointments = ({ treatment }) => {
             <SelectTreatment treatment={"HairCut"} />
             <SelectTreatment treatment={"Saloon"} />
             <SelectTreatment treatment={"Cuts"} />
-          </ScrollView>
+          </Animated.ScrollView>
+          </View>
         </Animated.View>
       </Modal>
     </SafeAreaView>
@@ -85,13 +110,35 @@ const BookAppointments = ({ treatment }) => {
 };
 
 
+
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+
+    justifyContent: "flex-end", // Align the modal at the bottom
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    borderTopLeftRadius: 30,
+    maxHeight: "50%",
+    borderTopRightRadius: 30,
+  },
+  scrollView: {
+    maxHeight: 400, // Set a max height for the scroll view
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    paddingBottom: 20,
+  },
+  scrollViewContent: {
+    flexGrow: 1, // Allow the content to grow within the scroll view
+  },
   navbar: {
     backgroundColor: "#000",
   },
   iconLayout: {
     overflow: "hidden",
     width: "100%",
+
   },
   bookappointments: {
 
@@ -101,6 +148,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingHorizontal: 0,
     paddingVertical: 10,
+    height:"50%",
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -265,6 +313,7 @@ const styles = StyleSheet.create({
       width: 1,
       height: -3,
     },
+    
     backgroundColor: "#ffffff",
     shadowColor: "rgba(0, 0, 0, 0.8)",
     height: "100%",

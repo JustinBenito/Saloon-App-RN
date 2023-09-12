@@ -15,73 +15,72 @@ import { Calendar } from "react-native-calendars";
 import { Padding, FontFamily, FontSize, Color, Border } from "../GlobalStyles";
 
 const SelectDay = () => {
-  const translateY = useRef(new Animated.Value(200)).current;
-  const [modalVisible, setModalVisible] = useState(false);
 
-  const [visible, setVisible]=useState(false)
+  const [visible, setVisible]=useState(true)
   const show=()=>setVisible(true)
-  const hide=()=>setVisible(false)
+  const hide=()=>{setVisible(false);setTimeout(()=>setModalVisible(false),500)}
+  const [modalVisible, setModalVisible]=useState(true)
+
+
+
+  let items=[{name:"Yativ"},{name:"Yativ"}]
+
+  const translate=useRef(new Animated.Value(500)).current
+
+  const translateScroll=useRef(new Animated.Value(500)).current
 
   useEffect(()=>{
-show();
-  },[])
+if(visible){
+
+Animated.timing(translate,{
+  toValue: 0,
+  useNativeDriver: true,
+  duration: 1000,
+  delay: 100,
+  easing: Easing.out(Easing.quad)
+}).start()
+
+Animated.timing(translateScroll,{
+  toValue: 0,
+  useNativeDriver: true,
+  duration: 1000,
+  delay: 700,
+  easing: Easing.out(Easing.quad)
+}).start()
+
+}
+else{
+  Animated.timing(translate,{
+    toValue: 500,
+    useNativeDriver: true,
+    duration: 2300,
+    delay: 300,
+    easing: Easing.out(Easing.quad)
+  }).start()
+  
+  Animated.timing(translateScroll,{
+    toValue: 500,
+    useNativeDriver: true,
+    duration: 2000,
+    delay: 100,
+    easing: Easing.out(Easing.quad)
+  }).start()
+}
+  },[visible])
 
 
-  // useEffect(() => {
-  //   if (modalVisible) {
-  //     // Animate the modal to come from the bottom
-  //     Animated.timing(translateY, {
-  //       toValue: 500,
-  //       duration: 1000,
-  //       easing: Easing.ease,
-  //       useNativeDriver: false,
-  //     }).start();
-  //   } else {
-  //     // Animate the modal to go back to the bottom
-  //     Animated.timing(translateY, {
-  //       toValue: 50, // Adjust the value to hide it at the bottom
-  //       duration: 1000,
-  //       easing: Easing.ease,
-  //       useNativeDriver: false,
-  //     }).start();
-  //   }
-  // }, [modalVisible]);
 
-  // return (
-  //   <SafeAreaView style={[styles.selectDay, styles.iconLayout]}>
-  //     <Modal
-  //     visible={visible}
-  //     transparent={true}
-  //     animationType="slide"
-  //    onRequestClose={() => hide()}
-  //     >
-  //     <View
-  //       style={[
-  //         styles.selectEmployeeModal,
-  //         // { transform: [{ translateY }] },
-  //       ]}
-  //       contentContainerStyle={styles.modal}
-  //     >
-  //       <View style={styles.modalContainer}>
-        
-  //       </View>
-  //     </View>
-  //     </Modal>
-  //   </SafeAreaView>
-  // );
 
   return (
     <SafeAreaView style={[styles.iconLayout]}>
-      <Modal
-      visible={visible}
-      animationType="slide"
-      onRequestClose={() => hide()}
+     <Modal
+      visible={modalVisible}
       transparent
+      onRequestClose={() => hide()}
       >
-     <View style={styles.modalContainer}>
+     <Animated.View style={[styles.modalContainer,{transform: [{translateY: translate}]}]}>
           <View style={styles.modalContent}>
-          
-          <ScrollView style={styles.calendarContainer}>
+          <Animated.ScrollView style={[styles.calendarContainer,,{transform: [{translateY: translateScroll}]}]}>
         <View style={styles.close}>
           <TouchableOpacity
             style={styles.vector}
@@ -107,10 +106,10 @@ show();
             }}
           />
         </View>
-        </ScrollView>
+        </Animated.ScrollView>
 
           </View>
-        </View>
+        </Animated.View>
       </Modal>
     </SafeAreaView>
   );
@@ -130,7 +129,8 @@ const styles = StyleSheet.create({
   },
   calendarContainer:{
     width: "100%",
-    paddingVertical: 10,
+    paddingVertical: 20,
+
   },
   modal:{
     justifyContent: "flex-end",

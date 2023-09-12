@@ -17,29 +17,73 @@ import EmpButton from "../components/EmpButton";
 
 const EmployeeSelect = () => {
 
-  const [visible, setVisible]=useState(false)
+  const [visible, setVisible]=useState(true)
   const show=()=>setVisible(true)
-  const hide=()=>setVisible(false)
+  const hide=()=>{setVisible(false);setTimeout(()=>setModalVisible(false),500)}
+  const [modalVisible, setModalVisible]=useState(true)
 
-  useEffect(()=>{
-show();
-  },[])
+
 
   let items=[{name:"Yativ"},{name:"Yativ"}]
 
+  const translate=useRef(new Animated.Value(500)).current
+
+  const translateScroll=useRef(new Animated.Value(500)).current
+
+  useEffect(()=>{
+if(visible){
+
+Animated.timing(translate,{
+  toValue: 0,
+  useNativeDriver: true,
+  duration: 1000,
+  delay: 100,
+  easing: Easing.out(Easing.quad)
+}).start()
+
+Animated.timing(translateScroll,{
+  toValue: 0,
+  useNativeDriver: true,
+  duration: 1000,
+  delay: 700,
+  easing: Easing.out(Easing.quad)
+}).start()
+
+}
+else{
+  Animated.timing(translate,{
+    toValue: 500,
+    useNativeDriver: true,
+    duration: 1000,
+    delay: 300,
+    easing: Easing.out(Easing.quad)
+  }).start()
+  
+  Animated.timing(translateScroll,{
+    toValue: 500,
+    useNativeDriver: true,
+    duration: 1000,
+    delay: 100,
+    easing: Easing.out(Easing.quad)
+  }).start()
+}
+  },[visible])
+
+
+console.log("transform",translate)
 
   return (
     <SafeAreaView style={[styles.employeeSelect, styles.iconLayout]}>
       <Modal
-      visible={visible}
-      animationType="slide"
-      onRequestClose={() => hide()}
+      visible={modalVisible}
       transparent
+      onRequestClose={() => hide()}
       >
-     <View style={styles.modalContainer}>
+
+      <Animated.View style={[styles.modalContainer,{transform: [{translateY: translate}]}]}>
           <View style={styles.modalContent}>
-          <ScrollView
-              style={styles.scrollView}
+          <Animated.ScrollView
+              style={[styles.scrollView,{transform: [{translateY: translateScroll}]}]}
               contentContainerStyle={styles.scrollViewContent}
             >
             <View style={styles.header}>
@@ -58,9 +102,10 @@ show();
               {items.map((item, index) => (
                 <EmpButton name={item.name} key={index}/>
               ))}
-            </ScrollView>
+            </Animated.ScrollView>
           </View>
-        </View>
+      </Animated.View>
+
       </Modal>
     </SafeAreaView>
   );
@@ -72,7 +117,6 @@ const styles = StyleSheet.create({
   },
   modal:{
 justifyContent: "flex-end",
-height: "100%",
   },
   selectEmployeeModalContent: {
 

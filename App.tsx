@@ -31,6 +31,7 @@ const App = () => {
       <NavigationContainer>
         {hideSplashScreen ? (
           <Stack.Navigator screenOptions={{ headerShown: false }}>
+            
             <Stack.Screen
               name="EmployeeSelect"
               component={EmployeeSelect}
@@ -71,6 +72,7 @@ const App = () => {
                 header: () => <Navbar goto={"Appointmentdisp"}/>, //1
               })}
             />
+            
             <Stack.Screen
               name="BookAppointments"
               component={BookAppointments}

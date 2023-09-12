@@ -1,30 +1,68 @@
-import React, {useState, useEffect} from 'react';
-import { Modal, View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import { Modal, View, Text, Image, TouchableOpacity, StyleSheet, Animated, Easing } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontFamily, Padding, FontSize, Color, Border } from "../GlobalStyles";
 
 const ModalComponent = () => {
 
-    const [visible, setVisible]=useState(false)
-    const show=()=>setVisible(true)
-    const hide=()=>setVisible(false)
+    const [visible, setVisible]=useState(true)
 
+    const hide=()=>{setVisible(false);setTimeout(()=>setModalVisible(false),1000)}
+    const [modalVisible, setModalVisible]=useState(true)
+
+    const translate=useRef(new Animated.Value(600)).current
+
+    const translateScroll=useRef(new Animated.Value(600)).current
+  
     useEffect(()=>{
-show();
-    },[])
+  if(visible){
+  Animated.timing(translate,{
+    toValue: 0,
+    useNativeDriver: true,
+    duration: 500,
+    delay: 100,
+    easing: Easing.out(Easing.quad)
+  }).start()
+  
+  Animated.timing(translateScroll,{
+    toValue: 0,
+    useNativeDriver: true,
+    duration: 1000,
+    delay: 700,
+    easing: Easing.out(Easing.quad)
+  }).start()
+  }
+  else{
+    Animated.timing(translate,{
+      toValue: 300,
+      useNativeDriver: true,
+      duration: 1000,
+      delay: 500,
+      easing: Easing.out(Easing.quad)
+    }).start()
+    
+    Animated.timing(translateScroll,{
+      toValue: 300,
+      useNativeDriver: true,
+      duration: 1000,
+      delay: 100,
+      easing: Easing.out(Easing.quad)
+    }).start()
+  }
+    },[visible])
 
 
   return (
     <SafeAreaView style={styles.bg}>
 
     <Modal
-      visible={visible}
-      transparent={true}
-      animationType="slide"
+      visible={modalVisible}
+transparent
      onRequestClose={() => hide()}
     >
-      <View style={styles.modalContainer}>
-        <View style={styles.modal}>
+    <Animated.View style={[styles.modalContainer,{transform: [{translateY: translate}]}]}>
+        <View style={styles.modalContent}>
+        <Animated.ScrollView style={[styles.modal,{transform: [{translateY: translateScroll}]}]}>
           <View style={styles.header}>
             <TouchableOpacity onPress={() => hide()} style={styles.closeButton}>
             <Image
@@ -69,14 +107,23 @@ show();
             </View>
             </View>
           </View>
+        </Animated.ScrollView>
         </View>
-      </View>
+      </Animated.View>
     </Modal>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContent:{
+
+      backgroundColor: "#fff",
+      borderTopLeftRadius: 30,
+      // maxHeight: "50%",
+      borderTopRightRadius: 30,
+ 
+  },
   heading:{
     fontSize: FontSize.size_lgi_5,
     color: Color.colorBlack,
@@ -108,7 +155,7 @@ height: "100%"
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 20,
-    maxHeight: '50%', // Make the modal take up half of the screen
+     // Make the modal take up half of the screen
   },
   header: {
     flexDirection: 'row',
